@@ -1,49 +1,89 @@
 import React, { Component } from 'react';
 import './App.css';
 
+const data = [
+  { id: 'snare', letter: 'Q', src: 'https://www.myinstants.com/media/sounds/snare.mp3' },
+  { id: 'bass 1', letter: 'W', src: 'https://www.myinstants.com/media/sounds/bass-drum.mp3' },
+  { id: 'bongo', letter: 'E', src: 'http://tipiwiki.free.fr/snd/Percussion(4e)2.wav' },
+  { id: 'tom tom', letter: 'A', src: 'http://www.denhaku.com/r_box/sr16/sr16tom/loelectm.wav' },
+  { id: 'bass 3', letter: 'S', src: 'http://billor.chsh.chc.edu.tw/sound/bass4.wav' },
+  { id: 'shotgun', letter: 'D', src: 'http://david.guerrero.free.fr/Effects/ShotgunReload.wav' },
+  { id: 'high hat', letter: 'Z', src: 'http://www.denhaku.com/r_box/tr707/closed.wav' },
+  { id: 'drum hit', letter: 'X', src: 'http://www.masterbits.de/sc_docu/sounds1/1TM00013.MP3' },
+  { id: 'laser', letter: 'C', src: 'http://www.sa-matra.net/sounds/starcontrol/Umgah-Backzip.wav'  },
+]
+
+
 class App extends Component {
   constructor(props){
     super(props)
 
     this.state ={
-      key:''
+      display:'Click bellow or press key',
+
     }
-    this.handleClick = this.handleClick.bind(this);
   }
-  handleClick(e){ 
-    this.setState({
-      key:e.target.id
-    })
-    console.log(this.state.key)
-  }
-  
+
+ 
+  handleDisplay = display => this.setState({ display })
+ 
   render() {
     return (
-      <div className="container-fluid">
+      <div className="container">
         <div id="drum-machine">
-          <div className="row">
-            <div className="col-12">
-              <button type="button" id="q" className="drum-pad btn btn-danger" onClick={this.handleClick}>
-              Q
-              </button>
-              <button type="button" id="w" className="drum-pad btn btn-danger" onClick={this.handleClick}>W</button>
-              <button type="button" id="e" className="drum-pad btn btn-danger" onClick={this.handleClick}>E</button>
-            </div>
-            <div className="col-12">
-              <button type="button" id="a" className="drum-pad btn btn-danger" onClick={this.handleClick}>A</button>
-              <button type="button" id="s" className="drum-pad btn btn-danger" onClick={this.handleClick}>S</button>
-              <button type="button" id="d"className="drum-pad btn btn-danger" onClick={this.handleClick}>D</button>
-            </div>
-            <div className="col-12">
-              <button type="button" id="z" className="drum-pad btn btn-danger" onClick={this.handleClick}>Z</button>
-              <button type="button" id="x" className="drum-pad btn btn-danger"onClick={this.handleClick}>X</button>
-              <button type="button" id="c" className="drum-pad btn btn-danger"onClick={this.handleClick}>C</button>
-            </div>
-          </div>        
+        <div id="display">{this.state.display}</div>
+        <div id='drum-pads'>{data.map(d => (
+          <DrumPad
+            key={d.id}
+            id={d.id}
+            letter={d.letter}
+            src={d.src}
+            handleDisplay={this.handleDisplay}
+          />   
+         ))}</div>
       </div>
     </div>
     );
   }
 }
 
+class DrumPad extends Component {
+  
+  handleClick =() => { 
+    this.audio.play()
+    this.audio.currentTime = 0
+    this.props.handleDisplay(this.props.id)
+  }
+  
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeydown)
+    window.focus()
+  }
+  
+   componentWillUnmount() {
+     document.removeEventListener('keydown', this.handleKeydown)
+  }
+
+  handleKeydown(e) {
+    if(e.keyCode === this.props.letter.charCodeAt()) {
+      this.audio.play()
+      this.audio.currentTime = 0
+      this.props.handleDisplay(this.props.id)
+    }
+  }
+
+
+  render(){
+    return (
+        <div className='drum-pad' id={this.props.id} onClick={this.handleClick}>
+          <button className="btn btn-danger">{this.props.letter}</button>
+          <audio id={this.props.letter}
+               className='clip'
+               src={this.props.src}
+               ref={ref => this.audio = ref}
+          ></audio>
+        </div>
+    )
+  }
+}
 export default App;
