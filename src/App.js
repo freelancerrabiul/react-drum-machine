@@ -14,39 +14,6 @@ const data = [
 ]
 
 
-class App extends Component {
-  constructor(props){
-    super(props)
-
-    this.state ={
-      display:'Click bellow or press key',
-
-    }
-  }
-
- 
-  handleDisplay = display => this.setState({ display })
- 
-  render() {
-    return (
-      <div className="container">
-        <div id="drum-machine">
-        <div id="display">{this.state.display}</div>
-        <div id='drum-pads'>{data.map(d => (
-          <DrumPad
-            key={d.id}
-            id={d.id}
-            letter={d.letter}
-            src={d.src}
-            handleDisplay={this.handleDisplay}
-          />   
-         ))}</div>
-      </div>
-    </div>
-    );
-  }
-}
-
 class DrumPad extends Component {
   
   handleClick =() => { 
@@ -86,4 +53,40 @@ class DrumPad extends Component {
     )
   }
 }
+
+
+
+class App extends Component {
+  constructor(props){
+    super(props)
+
+    this.state ={
+      display:'Click bellow or press key',
+
+    }
+  }
+
+ 
+  handleDisplay = display => this.setState({ display })
+ 
+  render() {
+    return (
+      <div className="container">
+        <div id="drum-machine">
+        <div id="display">{this.state.display}</div>
+        <div id='drum-pads'>{data.map(d => (
+          <DrumPad
+            key={d.id}
+            id={d.id}
+            letter={d.letter}
+            src={d.src}
+            handleDisplay={this.handleDisplay}
+          />   
+         ))}</div>
+      </div>
+    </div>
+    );
+  }
+}
+
 export default App;
