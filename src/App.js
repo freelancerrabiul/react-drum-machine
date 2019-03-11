@@ -31,7 +31,7 @@ class DrumPad extends Component {
      document.removeEventListener('keydown', this.handleKeydown)
   }
 
-  handleKeydown(e) {
+  handleKeydown= e => {
     if(e.keyCode === this.props.letter.charCodeAt()) {
       this.audio.play()
       this.audio.currentTime = 0
